@@ -1,20 +1,27 @@
 import pandas as pd
-
+import logging
 
 def load_data(path: str) -> pd.DataFrame:
-    return pd.read_csv(path)
-
+    """Ładuje dane z CSV z podstawową obsługą błędów."""
+    try:
+        return pd.read_csv(path)
+    except Exception as e:
+        logging.error(f"Błąd ładowania danych: {e}")
+        return pd.DataFrame()
 
 def basic_report(df: pd.DataFrame) -> dict:
-    return {
+    """Generuje rozszerzony raport o strukturze danych."""
+    if df.empty:
+        return {"error": "Pusty DataFrame"}
+
+    report = {
         'rows': len(df),
         'columns': len(df.columns),
         'missing_values': int(df.isna().sum().sum()),
-        'target_distribution': df['target'].value_counts().to_dict() if 'target' in df.columns else {}
+        'column_names': list(df.columns)
     }
-
-
-if __name__ == '__main__':
-    url = 'https://raw.githubusercontent.com/plotly/datasets/master/heart.csv'
-    data = load_data(url)
-    print(basic_report(data))
+    
+    if 'target' in df.columns:
+        report['target_distribution'] = df['target'].value_counts(normalize=True).to_dict()
+        
+    return report
