@@ -1,22 +1,30 @@
-def calculate_risk_score(age, cholesterol, heart_rate):
+def calculate_risk_score(age: int, cholesterol: int, max_heart_rate: int) -> float:
     """
     Oblicza wskaźnik ryzyka na podstawie wieku, cholesterolu i tętna.
-    
-    Logika: (wiek * 0.2) + (cholesterol * 0.05) - (tętno * 0.03)
+    Wzór: (wiek * 0.2) + (cholesterol * 0.05) - (tętno * 0.03)
     """
-    # Sprawdzenie typów danych (Type Safety)
-    if not all(isinstance(x, (int, float)) for x in [age, cholesterol, heart_rate]):
-        raise TypeError("Wszystkie argumenty muszą być liczbami (int lub float).")
+    if age < 0 or cholesterol < 0 or max_heart_rate <= 0:
+        raise ValueError('All parameters must be positive.')
 
-    # Walidacja wartości logicznych
-    if age < 0:
-        raise ValueError("Wiek nie może być ujemny.")
-    if cholesterol < 0:
-        raise ValueError("Poziom cholesterolu nie może być ujemny.")
-    if heart_rate <= 0:
-        raise ValueError("Tętno musi być wartością dodatnią.")
-
-    # Obliczenia
-    score = (age * 0.2) + (cholesterol * 0.05) - (heart_rate * 0.03)
-    
+    score = age * 0.2 + cholesterol * 0.05 - max_heart_rate * 0.03
     return round(score, 2)
+
+def get_risk_category(score: float) -> str:
+    """
+    Klasyfikuje wynik punktowy do odpowiedniej grupy ryzyka.
+    """
+    if score < 10:
+        return "Niskie"
+    elif 10 <= score < 20:
+        return "Średnie"
+    else:
+        return "Wysokie"
+
+if __name__ == "__main__":
+    # Przykład użycia konsolowego
+    try:
+        a, c, h = 50, 200, 150
+        s = calculate_risk_score(a, c, h)
+        print(f"Wynik dla ({a}, {c}, {h}): {s} -> Kategoria: {get_risk_category(s)}")
+    except Exception as e:
+        print(f"Błąd: {e}")
