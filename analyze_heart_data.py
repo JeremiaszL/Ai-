@@ -50,3 +50,20 @@ def basic_report(df: pd.DataFrame) -> Dict[str, Any]:
         }
         
     return report
+
+# Heart Data Analyzer 🩺
+Proste narzędzie do wstępnej analizy zbiorów danych kardiologicznych.
+
+### Funkcjonalności:
+- **Bezpieczne ładowanie plików**: Odporność na brak plików i błędny format CSV.
+- **Raportowanie**: Szybki podgląd wymiarów danych, brakujących wartości i rozkładu klas.
+
+### Wymagania:
+- `pandas`
+- `python 3.8+`
+
+### Przykład użycia:
+```python
+df = load_data("heart.csv")
+report = basic_report(df)
+print(f"Liczba wierszy: {report['metadata']['rows_count']}")
