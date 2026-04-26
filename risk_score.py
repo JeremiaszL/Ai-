@@ -1,19 +1,22 @@
-import pytest
-from risk_score import calculate_risk_score
+def calculate_risk_score(age, cholesterol, heart_rate):
+    """
+    Oblicza wskaźnik ryzyka na podstawie wieku, cholesterolu i tętna.
+    
+    Logika: (wiek * 0.2) + (cholesterol * 0.05) - (tętno * 0.03)
+    """
+    # Sprawdzenie typów danych (Type Safety)
+    if not all(isinstance(x, (int, float)) for x in [age, cholesterol, heart_rate]):
+        raise TypeError("Wszystkie argumenty muszą być liczbami (int lub float).")
 
-def test_risk_logic():
-    # Dane: wiek=50, chol=200, hr=150 -> (10 + 10 - 4.5) = 15.5
-    assert calculate_risk_score(50, 200, 150) == 15.5
+    # Walidacja wartości logicznych
+    if age < 0:
+        raise ValueError("Wiek nie może być ujemny.")
+    if cholesterol < 0:
+        raise ValueError("Poziom cholesterolu nie może być ujemny.")
+    if heart_rate <= 0:
+        raise ValueError("Tętno musi być wartością dodatnią.")
 
-def test_negative_values():
-    with pytest.raises(ValueError):
-        calculate_risk_score(-10, 200, 150)
-
-def test_zero_heart_rate():
-    with pytest.raises(ValueError):
-        calculate_risk_score(50, 200, 0)
-
-# Mój Edge Case: Bardzo wysokie tętno przy niskim wieku/cholesterolu (wynik ujemny)
-def test_edge_case_low_risk():
-    result = calculate_risk_score(20, 100, 220)
-    assert result < 10.0
+    # Obliczenia
+    score = (age * 0.2) + (cholesterol * 0.05) - (heart_rate * 0.03)
+    
+    return round(score, 2)
